@@ -89,6 +89,11 @@ func BeforeSuite(t *testing.T) {
 
 var suiteClosers []func() error
 
+// Registers a Closeable resource that shold be closed after the suite completes.
+func CloseAfterSuite(closer func() error) {
+	suiteClosers = append(suiteClosers, closer)
+}
+
 func AfterSuite(t *testing.T) {
 	for i := len(classRuleChain.rules) - 1; i >= 0; i-- {
 		classRuleChainErrors = append(classRuleChainErrors, classRuleChain.rules[i].After())
