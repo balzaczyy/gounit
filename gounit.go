@@ -59,7 +59,11 @@ func (rc *_RuleChain) Apply(t *testing.T, f func(t *T)) func(t *T) {
 }
 
 func Test(t *testing.T, f func(t *T)) {
-	testRuleChain.Apply(t, f)(wrapT(t))
+	if testRuleChain == nil {
+		f(wrapT(t))
+	} else {
+		testRuleChain.Apply(t, f)(wrapT(t))
+	}
 }
 
 // Workaround Junit's TestRule for class
@@ -75,6 +79,9 @@ type _ClassRuleChain struct {
 var classRuleChain *_ClassRuleChain
 
 func ClassRuleChain(rule ClassTestRule) *_ClassRuleChain {
+	if rule == nil {
+		panic("initial rule cannot be nil")
+	}
 	classRuleChain = &_ClassRuleChain{[]ClassTestRule{rule}}
 	return classRuleChain
 }
