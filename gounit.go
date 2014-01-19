@@ -90,7 +90,9 @@ var classRuleChainErrors []error
 
 func BeforeSuite(t *testing.T) {
 	for _, rule := range classRuleChain.rules {
-		classRuleChainErrors = append(classRuleChainErrors, rule.Before())
+		if err := rule.Before(); err != nil {
+			classRuleChainErrors = append(classRuleChainErrors, err)
+		}
 	}
 }
 
@@ -103,7 +105,9 @@ func CloseAfterSuite(closer func() error) {
 
 func AfterSuite(t *testing.T) {
 	for i := len(classRuleChain.rules) - 1; i >= 0; i-- {
-		classRuleChainErrors = append(classRuleChainErrors, classRuleChain.rules[i].After())
+		if err := classRuleChain.rules[i].After(); err != nil {
+			classRuleChainErrors = append(classRuleChainErrors, err)
+		}
 	}
 	if len(classRuleChainErrors) > 0 {
 		panic(fmt.Sprintf("Errors during afterSuite(): %v", classRuleChainErrors))
