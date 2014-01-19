@@ -14,7 +14,11 @@ func wrapT(t *testing.T) *T {
 }
 
 func (c *T) Error(args ...interface{}) {
-	c.delegate.Error(args)
+	if c.delegate != nil {
+		c.delegate.Error(args)
+	} else {
+		fmt.Println(args)
+	}
 }
 
 func (c *T) Assert(ok bool) {
