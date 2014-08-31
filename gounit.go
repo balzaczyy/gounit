@@ -22,14 +22,12 @@ func (c *T) Error(args ...interface{}) {
 }
 
 func (c *T) Assert(ok bool) {
-	if !ok {
-		c.Error("assert fail")
-	}
+	c.Assert2(ok, "assert fail")
 }
 
-func (c *T) Assert2(ok bool, msg string) {
+func (c *T) Assert2(ok bool, msg string, args ...interface{}) {
 	if !ok {
-		c.Error(msg)
+		c.Error(fmt.Sprintf(msg, args...))
 	}
 }
 
